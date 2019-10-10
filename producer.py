@@ -3,11 +3,11 @@ import logging
 import time
 
 class Producer():
-    def __init__(self, service_name, listen_address='localhost', listen_port=5000):
+    def __init__(self, service_name, address='localhost', port=5000):
         self.service_name = service_name
         self.name = 'Producer'
-        self.listen_address = listen_address
-        self.listen_port = listen_port
+        self.address = address
+        self.port = port
         self._job_channel = None
         self._secret_key = ''
         self.logger = logging.getLogger(self.name)
@@ -24,7 +24,7 @@ class Producer():
 
     def connect(self):
         BaseManager.register(self.service_name)
-        manager = BaseManager(address=(self.listen_address, self.listen_port), authkey=bytes( self._secret_key, encoding='utf8'))
+        manager = BaseManager(address=(self.address, self.port), authkey=bytes( self._secret_key, encoding='utf8'))
         manager.connect()
         self._job_channel = getattr(manager, self.service_name)()
 
@@ -36,4 +36,4 @@ if __name__=='__main__':
     producer.set_secret_key('secret-key')
     producer.connect()
     for i in range(10):
-        producer.produce("msg-{}".format(i))
+        producer.produce('msg-{}'.format(i))
